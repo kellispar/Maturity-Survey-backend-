@@ -1,0 +1,248 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Riskmatix Assessment</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
+        line-height: 1.4;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #2c3e50;
+        font-size: 24px;
+        margin-bottom: 15px;
+        font-weight: bold;
+      }
+
+      .intro-text {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
+
+      h2 {
+        color: #2c3e50;
+        font-size: 18px;
+        margin-bottom: 15px;
+        margin-top: 25px;
+        font-weight: bold;
+      }
+
+      .responses-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 25px;
+        border: 2px solid #ddd;
+      }
+
+      .responses-table th {
+        background-color: #34495e;
+        color: white;
+        padding: 12px;
+        text-align: left;
+        font-weight: bold;
+        font-size: 14px;
+        border: 1px solid #ddd;
+      }
+
+      .responses-table td {
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+        color: #333;
+      }
+
+      .responses-table tr:nth-child(even) {
+        background-color: #f8f9fa;
+      }
+
+      .responses-table tr:hover {
+        background-color: #e8f4f8;
+      }
+
+      .total-score {
+        font-size: 20px;
+        font-weight: bold;
+        color: #2c3e50;
+        margin: 25px 0;
+      }
+
+      .recommendation {
+        margin: 20px 0;
+      }
+
+      .recommendation-label {
+        font-weight: bold;
+        color: #2c3e50;
+        display: inline;
+      }
+
+      .recommendation-text {
+        color: #333;
+        display: inline;
+      }
+
+      .rationale {
+        margin: 15px 0;
+      }
+
+      .rationale-label {
+        font-weight: bold;
+        color: #2c3e50;
+        display: inline;
+      }
+
+      .rationale-text {
+        color: #333;
+        display: inline;
+      }
+
+      .decision-matrix {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        border: 2px solid #ddd;
+      }
+
+      .decision-matrix th {
+        background-color: #34495e;
+        color: white;
+        padding: 12px;
+        text-align: left;
+        font-weight: bold;
+        font-size: 13px;
+        vertical-align: top;
+        border: 1px solid #ddd;
+      }
+
+      .decision-matrix td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        font-size: 13px;
+        color: #333;
+        vertical-align: top;
+      }
+
+      .decision-matrix tr:nth-child(even) {
+        background-color: #f8f9fa;
+      }
+
+      .current-state {
+        width: 25%;
+      }
+
+      .recommended-focus {
+        width: 35%;
+      }
+
+      .order-execution {
+        width: 20%;
+      }
+
+      .servicenow-capabilities {
+        width: 20%;
+      }
+
+      .bullet-point {
+        margin-bottom: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <h1>Riskmatix: Example Completed Risk Transition Assessment</h1>
+
+      <p class='intro-text'>
+        This example shows how a completed assessment might look using the
+        Riskmatix ServiceNow transition tool.
+      </p>
+
+      <h2>{{surveyName}}</h2>
+
+      <table class='responses-table'>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Response</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each assessmentResults}}
+            <tr>
+              <td>{{category}}</td>
+              <td>{{maturityLevel}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+      <div class='total-score'>Total Score: {{overallScore}}</div>
+
+      <h2>Interpretation</h2>
+
+      <div class='recommendation'>
+        <span class='recommendation-label'>Recommendation:</span>
+        <span class='recommendation-text'>
+          Moderate recommendation to phase in ServiceNow IRM starting with Issue
+          Management.</span>
+      </div>
+
+      <div class='rationale'>
+        <span class='rationale-label'>Rationale:</span>
+        <span class='rationale-text'>
+          {{rationale}}</span>
+      </div>
+
+      <h2>Decision Matrix Detail</h2>
+
+      <table class='decision-matrix'>
+        <thead>
+          <tr>
+            <th class='current-state'>Current State</th>
+            <th class='recommended-focus'>Recommended Focus</th>
+            <th class='order-execution'>Order of Execution</th>
+            <th class='servicenow-capabilities'>ServiceNow Capabilities</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Mix of 'Partially', 'Some', or 'Medium' responses</td>
+            <td>Start with Issue Management, then Risk Register and Audit
+              Management</td>
+            <td>
+              <div class='bullet-point'>1. Issue Management</div>
+              <div class='bullet-point'>2. Risk Register</div>
+              <div class='bullet-point'>3. Audit Integration</div>
+              <div class='bullet-point'>4. Performance Analytics</div>
+            </td>
+            <td>
+              <div class='bullet-point'>- Issue Workflow & SLA tracking</div>
+              <div class='bullet-point'>- Control & Risk Register</div>
+              <div class='bullet-point'>- Role-based audit traceability</div>
+              <div class='bullet-point'>- Dashboards for risk/issue aging</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

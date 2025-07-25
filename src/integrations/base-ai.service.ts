@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { AssessmentPDF, AssessmentResult } from 'src/results/types/assessment';
 
 export interface SurveyAnswer {
   question: {
@@ -13,6 +14,7 @@ export interface SurveyData {
   survey: {
     name: string;
     description?: string;
+    id: number;
   };
   answers: SurveyAnswer[];
   maturityScore: number;
@@ -112,7 +114,7 @@ export abstract class BaseAiService {
 
     const prompt = `
     You are an expert GRC (Governance, Risk, and Compliance) consultant tasked with writing a formal executive summary for a client's Integrated Risk Management (IRM) maturity assessment. Your tone must be professional, direct, and focused on business impact. The summary should be a single, concise paragraph of no more than 4 sentences.
-
+4
     ---
     **EXAMPLE**
 
@@ -138,6 +140,40 @@ export abstract class BaseAiService {
         .join(', ') || 'None'
       }
   `;
+
+    return prompt;
+  }
+
+  protected generateTransitionAssessmentPrompt(
+    assessmentPDF: AssessmentPDF,
+  ): string {
+    const { surveyName, overallScore, assessmentResults } = assessmentPDF;
+
+    const prompt = `
+      You are an expert GRC (Governance, Risk, and Compliance) consultant writing a formal assessment report. Your specialty is helping organizations transition to enterprise platforms like ServiceNow. Your tone should be professional, insightful, and prescriptive.
+
+      You will be given a JSON object containing the results of a client's "Risk Transition Assessment," including the program name, a total score, and a list of qualitative responses.
+
+      Your task is to generate a structured JSON response with two keys: "interpretation" and "rationale".
+
+      1.  The **interpretation** should be a single, high-level sentence that summarizes the overall situation and states the primary recommendation.
+      2.  The **rationale** should be a slightly longer, more detailed explanation (2-3 sentences). It must synthesize the qualitative responses to explain *why* the recommendation is appropriate. It should identify both the positive signs (e.g., "some automation") and the clear weaknesses (e.g., "informal oversight," "mixed reporting") to provide a balanced view.
+
+      Here is the assessment data:
+      {
+        "programName": "${surveyName}",
+        "totalScore": ${overallScore},
+        "responses": ${JSON.stringify(this.convertToAssessmentResult(assessmentResults), null, 2)}
+      }
+
+      Based on this data, provide your response as a single, minified JSON object with the keys "interpretation" and "rationale". The JSON response should be structured as follows:
+      {
+        "interpretation": "Your high-level summary and primary recommendation here.",
+        "rationale": "Your detailed explanation synthesizing the qualitative responses."
+      }
+      
+      DO NOT include any other text, explanations, or markdown formatting. The output must be ONLY the JSON object, starting with a single opening curly brace and ending with a single closing curly brace.
+    `;
 
     return prompt;
   }
@@ -174,5 +210,12 @@ export abstract class BaseAiService {
     }, 0);
 
     return sum / categoryAnswers.length;
+  }
+
+  private convertToAssessmentResult(assessmentResults: AssessmentResult[]) {
+    return assessmentResults.reduce((acc, result) => {
+      acc[result.category] = result.maturityLevel;
+      return acc;
+    }, {});
   }
 }

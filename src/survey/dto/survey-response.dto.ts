@@ -6,4 +6,7 @@ export class SurveyResponseDto {
 
   @IsString()
   mermaidDiagram: string;
+
+  @IsString()
+  pdfPath: string;
 }

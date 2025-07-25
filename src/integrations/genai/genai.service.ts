@@ -1,6 +1,7 @@
 import { GoogleGenAI } from '@google/genai';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AssessmentPDF } from 'src/results/types/assessment';
 import { BaseAiService, PromptOptions, SurveyData } from '../base-ai.service';
 
 @Injectable()
@@ -62,5 +63,15 @@ export class GenAiService extends BaseAiService {
       maxTokens: 2000,
     };
     return this.generateRecommendations(surveyData, options);
+  }
+
+  async generateTransitionAssessment(assessmentPDF: AssessmentPDF) {
+    const prompt = this.generateTransitionAssessmentPrompt(assessmentPDF);
+    const options: PromptOptions = {
+      model: 'gemini-2.5-flash-lite-preview-06-17',
+      temperature: 0.5,
+      maxTokens: 1500,
+    };
+    return this.generateText(prompt, options);
   }
 }
